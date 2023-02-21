@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  email-worker:
+    container_name: api-email-worker
+    restart: always
+    build:
+      context: .
+      dockerfile: src/GestioneSagre.Email.Worker/Dockerfile
+    networks:
+      - lan-network
+
+networks:
+  lan-network:
+    external:
+      name: docker-net

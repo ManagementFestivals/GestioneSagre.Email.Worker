@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+      <PackageReference Include="GestioneSagre.Messaging" Version="1.0.1" />
+      <PackageReference Include="MediatR" Version="12.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GestioneSagre.Email.Worker.DataAccessLayer\GestioneSagre.Email.Worker.DataAccessLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="GestioneSagre.Messaging">
+      <HintPath>..\..\GestioneSagre.Messaging.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

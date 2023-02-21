@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>GestioneSagre.Email.Worker</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GestioneSagre.Messaging" Version="1.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.14">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GestioneSagre.Email.Worker.BusinessLayer\GestioneSagre.Email.Worker.BusinessLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="GestioneSagre.Messaging">
+      <HintPath>..\..\GestioneSagre.Messaging.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
