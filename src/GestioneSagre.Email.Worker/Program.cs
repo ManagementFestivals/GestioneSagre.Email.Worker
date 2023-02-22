@@ -1,39 +1,19 @@
-using GestioneSagre.Email.Worker.BusinessLayer.Receivers;
-using GestioneSagre.Email.Worker.DataAccessLayer;
-using GestioneSagre.Messaging.RabbitMq;
-using GestioneSagre.SharedKernel.Models.Email;
-using Microsoft.EntityFrameworkCore;
+namespace GestioneSagre.Email.Worker;
 
-var host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices(ConfigureServices)
-    .Build();
-
-await host.RunAsync();
-
-void ConfigureServices(HostBuilderContext hostingContext, IServiceCollection services)
+public class Program
 {
-    var configuration = hostingContext.Configuration;
-
-    services.AddRabbitMq(settings =>
+    public static void Main(string[] args)
     {
-        settings.ConnectionString = configuration.GetConnectionString("RabbitMQ");
-        settings.ExchangeName = configuration.GetValue<string>("AppSettings:ApplicationName");
-        settings.QueuePrefetchCount = configuration.GetValue<ushort>("AppSettings:QueuePrefetchCount");
-    }, queues =>
-    {
-        queues.Add<EmailRequest>();
-    })
-    .AddReceiver<EmailRequest, EmailMessageReceiver>();
+        var builder = WebApplication.CreateBuilder(args);
 
-    services.AddDbContextPool<EmailSenderDbContext>(optionsBuilder =>
-    {
-        var connectionString = configuration.GetSection("ConnectionStrings").GetValue<string>("Default");
+        Startup startup = new(builder.Configuration);
 
-        optionsBuilder.UseSqlServer(connectionString, options =>
-        {
-            // Abilito il connection resiliency per gestire le connessioni perse
-            // Info su: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency
-            options.EnableRetryOnFailure(3);
-        });
-    });
+        startup.ConfigureServices(builder.Services);
+
+        var app = builder.Build();
+
+        startup.Configure(app);
+
+        app.Run();
+    }
 }

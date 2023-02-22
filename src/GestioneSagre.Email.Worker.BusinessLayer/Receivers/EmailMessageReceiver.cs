@@ -18,9 +18,9 @@ public class EmailMessageReceiver : IMessageReceiver<EmailRequest>
         try
         {
             //Codice da usare in fase di test
-            //logger.LogInformation("Processing order {OrderNumber}...", message.MessageId);
-            //await Task.Delay(TimeSpan.FromSeconds(10 + Random.Shared.Next(10)));
-            //logger.LogInformation("End processing order {OrderNumber}", message.MessageId);
+            logger.LogInformation("Processing message {MessageId}...", message.MessageId);
+            await Task.Delay(TimeSpan.FromSeconds(10 + Random.Shared.Next(10)));
+            logger.LogInformation("End processing order {MessageId}", message.MessageId);
 
             //Ricevo il messaggio dalla coda di RabbitMQ
             //Salvo il messaggio sul database
