@@ -1,6 +1,4 @@
-﻿using GestioneSagre.SharedKernel.Enums;
-
-namespace GestioneSagre.Email.Worker.DataAccessLayer.Entities;
+﻿namespace GestioneSagre.Email.Worker.DataAccessLayer.Entities;
 
 public class EmailMessage
 {

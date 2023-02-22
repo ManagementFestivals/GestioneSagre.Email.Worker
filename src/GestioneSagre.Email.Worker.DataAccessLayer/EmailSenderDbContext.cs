@@ -1,7 +1,4 @@
-﻿using GestioneSagre.Email.Worker.DataAccessLayer.Entities;
-using Microsoft.EntityFrameworkCore;
-
-namespace GestioneSagre.Email.Worker.DataAccessLayer;
+﻿namespace GestioneSagre.Email.Worker.DataAccessLayer;
 
 public class EmailSenderDbContext : DbContext
 {
