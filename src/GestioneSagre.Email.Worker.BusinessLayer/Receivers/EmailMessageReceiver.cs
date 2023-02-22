@@ -1,8 +1,4 @@
-﻿using GestioneSagre.Messaging.Abstractions;
-using GestioneSagre.SharedKernel.Models.Email;
-using Microsoft.Extensions.Logging;
-
-namespace GestioneSagre.Email.Worker.BusinessLayer.Receivers;
+﻿namespace GestioneSagre.Email.Worker.BusinessLayer.Receivers;
 
 public class EmailMessageReceiver : IMessageReceiver<EmailRequest>
 {
