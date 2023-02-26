@@ -1,6 +1,6 @@
 ﻿namespace GestioneSagre.Email.Worker.DataAccessLayer.Entities;
 
-public class EmailMessage
+public class EmailMessage : IEntity<int>
 {
     public int Id { get; set; }
     public Guid MessageId { get; set; }
