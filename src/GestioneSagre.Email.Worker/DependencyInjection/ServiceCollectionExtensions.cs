@@ -1,22 +1,11 @@
-﻿namespace GestioneSagre.Email.Worker.DomainLayer.DependencyInjection;
+﻿using GestioneSagre.Email.Worker.BusinessLayer.Services;
+
+namespace GestioneSagre.Email.Worker.DomainLayer.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddServiceCollection(this IServiceCollection services, IConfiguration Configuration)
     {
-        services
-            .Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
-
-        services.AddRabbitMq(settings =>
-        {
-            settings.ConnectionString = Configuration.GetConnectionString("RabbitMQ");
-            settings.ExchangeName = Configuration.GetValue<string>("AppSettings:ApplicationName");
-            settings.QueuePrefetchCount = Configuration.GetValue<ushort>("AppSettings:QueuePrefetchCount");
-        }, queues =>
-        {
-            queues.Add<EmailRequest>();
-        }).AddReceiver<EmailRequest, EmailMessageReceiver>();
-
         services.AddDbContextPool<EmailSenderDbContext>(optionsBuilder =>
         {
             var connectionString = Configuration.GetSection("ConnectionStrings").GetValue<string>("Default");
@@ -28,6 +17,31 @@ public static class ServiceCollectionExtensions
                 options.EnableRetryOnFailure(3);
             });
         });
+
+        services
+            .AddScoped<DbContext, EmailSenderDbContext>()
+            .AddScoped(typeof(IUnitOfWork<,>), typeof(UnitOfWork<,>))
+            .AddScoped(typeof(IDatabaseRepository<,>), typeof(DatabaseRepository<,>))
+            .AddScoped(typeof(ICommandRepository<,>), typeof(CommandRepository<,>));
+
+        services
+            .AddTransient<IEmailMessages, EmailMessages>();
+
+        services
+            .Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
+
+        services
+            .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetCountMessageHandler).Assembly));
+
+        services.AddRabbitMq(settings =>
+        {
+            settings.ConnectionString = Configuration.GetConnectionString("RabbitMQ");
+            settings.ExchangeName = Configuration.GetValue<string>("AppSettings:ApplicationName");
+            settings.QueuePrefetchCount = Configuration.GetValue<ushort>("AppSettings:QueuePrefetchCount");
+        }, queues =>
+        {
+            queues.Add<EmailRequest>();
+        }).AddReceiver<EmailRequest, EmailMessageReceiver>();
 
         return services;
     }

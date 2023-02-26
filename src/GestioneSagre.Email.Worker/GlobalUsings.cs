@@ -1,4 +1,7 @@
-﻿global using GestioneSagre.Email.Worker.BusinessLayer.Receivers;
+﻿global using GestioneSagre.Data.EFCore.Infrastructure.Interfaces;
+global using GestioneSagre.Data.EFCore.Infrastructure.Repository;
+global using GestioneSagre.Email.Worker.BusinessLayer.Handlers;
+global using GestioneSagre.Email.Worker.BusinessLayer.Receivers;
 global using GestioneSagre.Email.Worker.DataAccessLayer;
 global using GestioneSagre.Email.Worker.DomainLayer.DependencyInjection;
 global using GestioneSagre.Messaging.RabbitMq;
