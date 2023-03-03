@@ -1,33 +1,64 @@
-﻿namespace GestioneSagre.Email.Worker.BusinessLayer.Receivers;
+﻿using System.Net.Http.Json;
+using GestioneSagre.Email.Worker.BusinessLayer.Query;
+
+namespace GestioneSagre.Email.Worker.BusinessLayer.Receivers;
 
 public class EmailMessageReceiver : IMessageReceiver<EmailRequest>
 {
     private readonly ILogger<EmailMessageReceiver> logger;
+    private readonly IMediator mediator;
 
-    public EmailMessageReceiver(ILogger<EmailMessageReceiver> logger)
+    public EmailMessageReceiver(ILogger<EmailMessageReceiver> logger, IMediator mediator)
     {
         this.logger = logger;
+        this.mediator = mediator;
     }
 
     public async Task ReceiveAsync(EmailRequest message, CancellationToken cancellationToken)
     {
         try
         {
-            //Codice da usare in fase di test
-            logger.LogInformation("Processing message {MessageId}...", message.MessageId);
-            await Task.Delay(TimeSpan.FromSeconds(10 + Random.Shared.Next(10)));
-            logger.LogInformation("End processing order {MessageId}", message.MessageId);
-
             //Ricevo il messaggio dalla coda di RabbitMQ
-            //Salvo il messaggio sul database
+            var newMessage = new MessageSaveRequest()
+            {
+                MessageId = message.MessageId,
+                Recipient = message.RecipientEmail,
+                Subject = message.Subject,
+                Message = message.HtmlMessage,
+                SenderCount = 0,
+                Status = MailStatus.InProgress
+            };
 
-            //Chiamo il servizio api-email-sender di invio email
-            //var httpClient = new HttpClient();
-            //var response = await httpClient.PostAsJsonAsync("http://localhost:5164/api/home", message, cancellationToken);
+            // Verifico se il messaggio è già presente nel sistema
+            var messageCount = await mediator.Send(new GetCountMessageQuery(newMessage.MessageId), cancellationToken);
+
+            if (messageCount == 0)
+            {
+                // Salvo il messaggio sul database
+                var SenderResult = await mediator.Send(new SaveMessageCommand(newMessage), cancellationToken);
+
+                if (SenderResult == null)
+                {
+                    // Salvataggio dell'email su file di testo
+                }
+            }
+
+            // Chiamo il servizio api-email-sender di invio email
+            var httpClient = new HttpClient();
+            var result = await httpClient.PostAsJsonAsync("http://localhost:5164/api/home", message, cancellationToken);
+
+            if (result.IsSuccessStatusCode)
+            {
+                // Aggiorno lo stato dell'email a SENT sul database
+                await mediator.Send(new UpdateMessageCommand(message.MessageId));
+            }
         }
         catch (Exception exc)
         {
-            logger.LogError(exc, "Error during automatic process utility worker service for processing email {email}", message.MessageId);
+            logger.LogError(exc, "Attempt to send email {email} via API failed !", message.MessageId);
+
+            // Schedulazione nuovo tentativo in quanto è stato riscontrato un fallimento di quello precedente !
+            await mediator.Send(new GetRetryMessageQuery(message), cancellationToken);
         }
     }
 }
