@@ -1,6 +1,4 @@
-﻿using GestioneSagre.Email.Worker.BusinessLayer.Services;
-
-namespace GestioneSagre.Email.Worker.DomainLayer.DependencyInjection;
+﻿namespace GestioneSagre.Email.Worker.DomainLayer.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
