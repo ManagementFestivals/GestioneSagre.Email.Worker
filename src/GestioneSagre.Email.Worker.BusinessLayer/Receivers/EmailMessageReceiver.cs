@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using GestioneSagre.Email.Worker.BusinessLayer.Logger;
 using GestioneSagre.Email.Worker.BusinessLayer.Query;
 
 namespace GestioneSagre.Email.Worker.BusinessLayer.Receivers;
@@ -7,11 +8,13 @@ public class EmailMessageReceiver : IMessageReceiver<EmailRequest>
 {
     private readonly ILogger<EmailMessageReceiver> logger;
     private readonly IMediator mediator;
+    private readonly ITransactionLogger transaction;
 
-    public EmailMessageReceiver(ILogger<EmailMessageReceiver> logger, IMediator mediator)
+    public EmailMessageReceiver(ILogger<EmailMessageReceiver> logger, IMediator mediator, ITransactionLogger transaction)
     {
         this.logger = logger;
         this.mediator = mediator;
+        this.transaction = transaction;
     }
 
     public async Task ReceiveAsync(EmailRequest message, CancellationToken cancellationToken)
@@ -40,6 +43,7 @@ public class EmailMessageReceiver : IMessageReceiver<EmailRequest>
                 if (SenderResult == null)
                 {
                     // Salvataggio dell'email su file di testo
+                    await transaction.LogTransactionAsync(newMessage);
                 }
             }
 
