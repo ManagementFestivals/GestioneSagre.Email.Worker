@@ -1,5 +1,8 @@
-﻿global using GestioneSagre.Data.EFCore.Infrastructure.Interfaces;
+﻿global using System.Net.Http.Json;
+global using GestioneSagre.Data.EFCore.Infrastructure.Interfaces;
 global using GestioneSagre.Email.Worker.BusinessLayer.Command;
+global using GestioneSagre.Email.Worker.BusinessLayer.Logger;
+global using GestioneSagre.Email.Worker.BusinessLayer.Query;
 global using GestioneSagre.Email.Worker.BusinessLayer.Services;
 global using GestioneSagre.Email.Worker.DataAccessLayer.Entities;
 global using GestioneSagre.Messaging.Abstractions;
@@ -7,4 +10,5 @@ global using GestioneSagre.SharedKernel.Enums;
 global using GestioneSagre.SharedKernel.Models.Email;
 global using GestioneSagre.SharedKernel.Models.Message;
 global using MediatR;
+global using Microsoft.Extensions.Hosting;
 global using Microsoft.Extensions.Logging;

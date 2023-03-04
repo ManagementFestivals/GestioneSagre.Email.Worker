@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-
-namespace GestioneSagre.Email.Worker.BusinessLayer.Logger;
+﻿namespace GestioneSagre.Email.Worker.BusinessLayer.Logger;
 
 internal class TransactionLogger : ITransactionLogger
 {

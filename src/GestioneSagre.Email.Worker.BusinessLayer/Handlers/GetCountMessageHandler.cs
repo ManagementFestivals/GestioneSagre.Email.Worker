@@ -1,6 +1,4 @@
-﻿using GestioneSagre.Email.Worker.BusinessLayer.Query;
-
-namespace GestioneSagre.Email.Worker.BusinessLayer.Handlers;
+﻿namespace GestioneSagre.Email.Worker.BusinessLayer.Handlers;
 
 public class GetCountMessageHandler : IRequestHandler<GetCountMessageQuery, int>
 {

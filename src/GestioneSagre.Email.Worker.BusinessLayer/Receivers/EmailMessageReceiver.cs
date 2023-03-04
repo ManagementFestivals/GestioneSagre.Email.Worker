@@ -1,8 +1,4 @@
-﻿using System.Net.Http.Json;
-using GestioneSagre.Email.Worker.BusinessLayer.Logger;
-using GestioneSagre.Email.Worker.BusinessLayer.Query;
-
-namespace GestioneSagre.Email.Worker.BusinessLayer.Receivers;
+﻿namespace GestioneSagre.Email.Worker.BusinessLayer.Receivers;
 
 public class EmailMessageReceiver : IMessageReceiver<EmailRequest>
 {
